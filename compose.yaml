@@ -1,0 +1,18 @@
+services:
+  portauthority:
+    build: .
+    restart: unless-stopped
+    network_mode: host
+    # Set DOCKER_GID to the group ID owning /var/run/docker.sock.
+    group_add:
+      - "${DOCKER_GID:?Set DOCKER_GID to the Docker socket group ID}"
+    environment:
+      HOST: "127.0.0.1"
+      PORT: "8787"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true

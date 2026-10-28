@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101619">
+  <title>PortAuthority | Know your ports</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="/" aria-label="PortAuthority home"><span class="brand-icon">P<span>:</span></span><span>PortAuthority<small>YOUR SERVER, MAPPED.</small></span></a>
+    <div class="workspace-label">WORKSPACE</div>
+    <a class="nav-item active" href="#overview"><span aria-hidden="true">&#9638;</span> Port overview <span class="nav-dot"></span></a>
+    <a class="nav-item" href="#port-checker"><span aria-hidden="true">&#8981;</span> Port finder</a>
+    <div class="sidebar-bottom"><span class="status-dot"></span> Read-only monitoring<small>No containers are modified.</small><span class="version">PORTAUTHORITY / V1.0</span></div>
+  </aside>
+  <div class="main-shell">
+    <header class="topbar"><span>Workspace <span class="slash">/</span> <strong>Port overview</strong></span><span class="host-chip"><span class="status-dot"></span> Docker + Linux host</span></header>
+    <main id="overview">
+      <div id="demo-banner" class="notice demo" hidden>DEMO MODE <span>Sample data only. Connect your Linux Docker host for live monitoring.</span></div>
+      <div class="page-heading"><div><div class="eyebrow">A LITTLE ORDER FOR YOUR SERVER</div><h1>Every port. In the clear.</h1><p>See what’s listening, know what’s taken, and find your next open port.</p></div><button id="refresh" class="secondary"><span aria-hidden="true">&#8635;</span> Refresh</button></div>
+      <div id="status" role="status" class="sync-status">Connecting to your server...</div>
+      <div id="errors" class="notice warning" role="alert" hidden></div>
+      <section class="stats" aria-label="Server statistics">
+        <article class="stat"><div>Ports in use <span class="stat-symbol">&#8644;</span></div><strong id="port-count">--</strong><small>Unique port / protocol pairs</small></article>
+        <article class="stat"><div>Published containers <span class="stat-symbol">&#9638;</span></div><strong id="container-count">--</strong><small>With active TCP or UDP mappings</small></article>
+        <article class="stat"><div>Host listeners <span class="stat-symbol">&#9678;</span></div><strong id="host-count">--</strong><small>Unique bound port / protocol pairs</small></article>
+      </section>
+      <section id="port-checker" class="checker">
+        <div class="checker-intro"><span class="finder-icon" aria-hidden="true">&#8981;</span><div><h2>Need a port?</h2><p>Check availability. We’ll find an alternative if it’s taken.</p></div></div>
+        <form id="check-form"><div class="field"><label for="port">PORT NUMBER</label><input id="port" name="port" type="number" min="1" max="65535" step="1" placeholder="e.g. 8080" required></div><div class="field protocol-field"><label for="protocol">PROTOCOL</label><select id="protocol" name="protocol"><option value="tcp">TCP</option><option value="udp">UDP</option></select></div><button id="check-button" type="submit" class="primary">Check port <span aria-hidden="true">&#8594;</span></button></form>
+        <div id="check-result" role="status" hidden></div>
+        <p class="checker-note">Checked across all interfaces. Suggestions are a snapshot, not a reservation.</p>
+      </section>
+      <section class="inventory">
+        <div class="section-heading"><div><h2>Port inventory <span id="row-count" class="count-pill">0</span></h2><p>Published Docker ports and listening host sockets, all in one place.</p></div><span class="live-label"><span class="status-dot"></span> AUTO-REFRESH 15s</span></div>
+        <div class="toolbar"><div class="tabs" role="group" aria-label="Filter by source"><button class="tab selected" data-source="all" aria-pressed="true">All ports</button><button class="tab" data-source="docker" aria-pressed="false">Docker</button><button class="tab" data-source="host" aria-pressed="false">Host</button></div><div class="filters"><label class="sr-only" for="protocol-filter">Filter protocol</label><select id="protocol-filter"><option value="all">All protocols</option><option value="tcp">TCP</option><option value="udp">UDP</option></select><label class="sr-only" for="search">Search ports or containers</label><input id="search" type="search" placeholder="Search ports, containers..." autocomplete="off"></div></div>
+        <div class="table-wrap"><table><thead><tr><th scope="col">HOST PORT</th><th scope="col">PROTOCOL</th><th scope="col">SERVICE / CONTAINER</th><th scope="col">BIND ADDRESS</th><th scope="col">TARGET PORT</th><th scope="col">SOURCE</th></tr></thead><tbody id="port-rows"><tr><td colspan="6" class="empty">Loading your port inventory...</td></tr></tbody></table></div>
+        <div class="table-footer"><span id="table-summary">Waiting for data</span><span>TCP listeners + bound UDP sockets</span></div>
+      </section>
+      <footer><span><span class="footer-mark" aria-hidden="true">P:</span> A clear view of your network.</span><span>Observe. Don’t interfere.</span></footer>
+    </main>
+  </div>
+</body>
+</html>
