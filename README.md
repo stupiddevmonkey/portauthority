@@ -141,3 +141,24 @@ The server and browser code run without a build step or dependency installation.
 ```sh
 npm test
 ```
+
+### CI and releases
+
+The [CI workflow](.github/workflows/ci.yml) runs on branch pushes and pull requests. It tests the app on Node.js 22 and 24 and builds the Docker image without publishing it. There is no dependency installation step because the app uses Node's built-in modules.
+
+The separate [release workflow](.github/workflows/release.yml) runs when you push a `v`-prefixed semantic version tag. For a stable release:
+
+```sh
+git tag v1.2.3
+git push origin v1.2.3
+```
+
+For a release candidate, use a tag such as `v1.3.0-rc.1`. The workflow validates the full SemVer format and reruns the tests on both Node versions before publishing anything. Tags such as `v1.2` or `v01.2.3` fail validation; tags without the `v` prefix do not trigger a release.
+
+Once the tests pass, it publishes a Linux amd64 image to `ghcr.io/<owner>/<repository>:<version>` and creates a GitHub Release with generated notes and the image digest. For this repository, `v1.2.3` produces `ghcr.io/stupiddevmonkey/portauthority:1.2.3`. Prerelease tags create GitHub prereleases and keep their full version in the image tag, such as `1.3.0-rc.1`.
+
+Only version-specific image tags are published; there is no moving `latest` tag. SemVer build metadata is supported, with `+` replaced by `_` in the Docker tag: `v1.2.3+build.7` becomes `1.2.3_build.7`. The original Git tag and GitHub Release name stay unchanged. Versions must fit Docker's 128-character tag limit.
+
+Publishing uses the repository's automatic `GITHUB_TOKEN` with release and package write permissions, so no registry password needs to be added. Repository or organization policies must allow those permissions. If a GHCR package with the same name already exists, grant this repository Actions access to it. Check the package's visibility in GitHub if you want people to pull it without signing in.
+
+Push a new tag for each release rather than moving an existing one. The tag is the release version; the workflow does not rewrite `package.json`.
